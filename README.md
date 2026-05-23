@@ -1,6 +1,6 @@
 # ILM AI - Personal AI Learning Companion
 
-**Builder:** [ARZUCODER]  
+**Builder:** ARZUCODER  
 **Project for:** AI Incubator Mentorship Program (Option A)
 
 ## Live Demos
