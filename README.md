@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/ARZUCODER/ILM-AI-showcase/main/ilm-ai-capstone/frontend/assets/images/icon.png" width="120" />
+  <img src="https://raw.githubusercontent.com/ARZUCODER/ILM-AI-showcase/main/screenshots/icon.png" width="120" />
   <h1>ILM AI - Full-Stack AI Learning Companion</h1>
   <p>
     <strong>From Idea to Production in 4 Weeks</strong><br/>
