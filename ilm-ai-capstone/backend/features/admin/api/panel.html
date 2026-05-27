@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ILM AI — Admin Panel</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #1e293b; --border: #334155;
+    --txt: #e2e8f0; --muted: #94a3b8; --accent: #6366f1;
+    --green: #22c55e; --red: #ef4444; --amber: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--txt); min-height: 100vh; }
+  .hidden { display: none !important; }
+  a { color: var(--accent); }
+
+  /* Login */
+  #login { max-width: 380px; margin: 12vh auto; padding: 32px;
+    background: var(--card); border-radius: 16px; border: 1px solid var(--border); }
+  #login h1 { font-size: 22px; margin-bottom: 4px; }
+  #login p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+  input, select {
+    width: 100%; padding: 11px 13px; margin-bottom: 12px; border-radius: 9px;
+    border: 1px solid var(--border); background: #0b1220; color: var(--txt); font-size: 14px;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  button {
+    background: var(--accent); color: #fff; border: none; padding: 11px 18px;
+    border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  button:hover { opacity: 0.9; }
+  button.ghost { background: transparent; border: 1px solid var(--border); color: var(--txt); }
+  button.sm { padding: 6px 12px; font-size: 12px; }
+  button.danger { background: var(--red); }
+  button.ok { background: var(--green); }
+  .err { color: var(--red); font-size: 13px; margin-top: 8px; }
+
+  /* App */
+  header { display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--card); }
+  header h1 { font-size: 18px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  nav { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  nav button { background: var(--card); border: 1px solid var(--border); }
+  nav button.active { background: var(--accent); border-color: var(--accent); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+  .stat .n { font-size: 30px; font-weight: 700; }
+  .stat .l { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 24px; }
+  .panel h2 { font-size: 16px; margin-bottom: 16px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; }
+  .badge { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .badge.on { background: rgba(34,197,94,.15); color: var(--green); }
+  .badge.off { background: rgba(239,68,68,.15); color: var(--red); }
+  .badge.prem { background: rgba(245,158,11,.15); color: var(--amber); }
+
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; align-items: end; }
+  .form-grid label { font-size: 12px; color: var(--muted); display:block; margin-bottom: 4px; }
+  .form-grid input, .form-grid select { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <h1>ILM AI Admin</h1>
+  <p>Sign in with your admin account</p>
+  <input id="email" type="email" placeholder="admin@email.com" autocomplete="username">
+  <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+  <button style="width:100%" onclick="login()">Sign in</button>
+  <div id="loginErr" class="err"></div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header>
+    <h1>ILM AI — Admin</h1>
+    <div>
+      <span id="who" style="color:var(--muted);font-size:13px;margin-right:12px"></span>
+      <button class="ghost sm" onclick="logout()">Logout</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <nav>
+      <button class="active" data-tab="dashboard" onclick="showTab('dashboard')">Dashboard</button>
+      <button data-tab="promos" onclick="showTab('promos')">Promo Codes</button>
+      <button data-tab="users" onclick="showTab('users')">Users</button>
+    </nav>
+
+    <!-- DASHBOARD -->
+    <section id="tab-dashboard">
+      <div class="cards" id="statCards"></div>
+    </section>
+
+    <!-- PROMOS -->
+    <section id="tab-promos" class="hidden">
+      <div class="panel">
+        <h2>Create Promo Code</h2>
+        <div class="form-grid">
+          <div><label>Code</label><input id="p_code" placeholder="PREMIUM2026"></div>
+          <div><label>Tier</label>
+            <select id="p_tier"><option value="premium">premium</option><option value="free">free</option></select>
+          </div>
+          <div><label>Discount %</label><input id="p_disc" type="number" value="100"></div>
+          <div><label>Max uses</label><input id="p_max" type="number" value="100"></div>
+          <div><label>Valid until</label><input id="p_until" type="date"></div>
+          <div><button class="ok" onclick="createPromo()">Create</button></div>
+        </div>
+        <div id="promoErr" class="err"></div>
+      </div>
+      <div class="panel">
+        <h2>Existing Promo Codes</h2>
+        <table>
+          <thead><tr><th>Code</th><th>Tier</th><th>Disc%</th><th>Used / Max</th><th>Valid until</th><th>Status</th><th></th></tr></thead>
+          <tbody id="promoRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- USERS -->
+    <section id="tab-users" class="hidden">
+      <div class="panel">
+        <h2>Users</h2>
+        <table>
+          <thead><tr><th>Email</th><th>Provider</th><th>Role</th><th>Goal</th></tr></thead>
+          <tbody id="userRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const API = location.origin; // backend serves this page, so same origin
+let TOKEN = localStorage.getItem("ilm_admin_token") || "";
+
+function authHeaders(extra) {
+  return Object.assign({
+    "Authorization": "Bearer " + TOKEN,
+    "User-Email": TOKEN,
+  }, extra || {});
+}
+
+async function api(path, opts) {
+  opts = opts || {};
+  opts.headers = authHeaders(opts.headers);
+  const r = await fetch(API + path, opts);
+  if (r.status === 401 || r.status === 403) { logout(); throw new Error("Unauthorized"); }
+  return r;
+}
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const errEl = document.getElementById("loginErr");
+  errEl.textContent = "";
+  try {
+    const r = await fetch(API + "/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.error || "Login failed"; return; }
+    TOKEN = data.token;
+    localStorage.setItem("ilm_admin_token", TOKEN);
+    enterApp();
+  } catch (e) { errEl.textContent = "Network error: " + e.message; }
+}
+
+function logout() {
+  TOKEN = "";
+  localStorage.removeItem("ilm_admin_token");
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+}
+
+function enterApp() {
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("who").textContent = TOKEN;
+  showTab("dashboard");
+}
+
+function showTab(tab) {
+  ["dashboard","promos","users"].forEach(t => {
+    document.getElementById("tab-"+t).classList.toggle("hidden", t !== tab);
+  });
+  document.querySelectorAll("nav button").forEach(b =>
+    b.classList.toggle("active", b.dataset.tab === tab));
+  if (tab === "dashboard") loadDashboard();
+  if (tab === "promos") loadPromos();
+  if (tab === "users") loadUsers();
+}
+
+async function loadDashboard() {
+  try {
+    const r = await api("/admin/dashboard");
+    const d = await r.json();
+    const cards = [
+      ["Total Users", d.total_users], ["Knowledge Chunks", d.total_chunks],
+      ["Chat Messages", d.total_chats], ["Tokens Used", d.total_tokens],
+    ];
+    document.getElementById("statCards").innerHTML = cards.map(c =>
+      `<div class="stat"><div class="n">${c[1] ?? 0}</div><div class="l">${c[0]}</div></div>`).join("");
+  } catch (e) {}
+}
+
+async function loadPromos() {
+  try {
+    const r = await api("/api/v1/admin/promo/list");
+    const d = await r.json();
+    const rows = (d.codes || []).map(p => {
+      const valid = (p.valid_until || "").substring(0,10);
+      const status = p.is_active
+        ? '<span class="badge on">active</span>' : '<span class="badge off">inactive</span>';
+      const tier = p.tier === "premium" ? '<span class="badge prem">premium</span>' : p.tier;
+      const toggle = p.is_active
+        ? `<button class="danger sm" onclick="togglePromo('${p.code}',false)">Disable</button>`
+        : `<button class="ok sm" onclick="togglePromo('${p.code}',true)">Enable</button>`;
+      return `<tr><td><b>${p.code}</b></td><td>${tier}</td><td>${p.discount_percent}%</td>
+        <td>${p.used_count}/${p.max_uses}</td><td>${valid}</td><td>${status}</td><td>${toggle}</td></tr>`;
+    }).join("");
+    document.getElementById("promoRows").innerHTML = rows || '<tr><td colspan="7" style="color:var(--muted)">No promo codes yet.</td></tr>';
+  } catch (e) {}
+}
+
+async function createPromo() {
+  const errEl = document.getElementById("promoErr");
+  errEl.textContent = "";
+  const body = {
+    code: document.getElementById("p_code").value.trim(),
+    tier: document.getElementById("p_tier").value,
+    discount_percent: parseInt(document.getElementById("p_disc").value || "0"),
+    max_uses: parseInt(document.getElementById("p_max").value || "0"),
+    valid_until: document.getElementById("p_until").value,
+  };
+  if (!body.code || !body.valid_until) { errEl.textContent = "Code and valid-until are required."; return; }
+  try {
+    const r = await api("/api/v1/admin/promo/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (!r.ok) { errEl.textContent = d.message || d.error || "Failed to create"; return; }
+    document.getElementById("p_code").value = "";
+    loadPromos();
+  } catch (e) { errEl.textContent = e.message; }
+}
+
+async function togglePromo(code, active) {
+  try {
+    await api(`/api/v1/admin/promo/${encodeURIComponent(code)}?active=${active}`, { method: "PUT" });
+    loadPromos();
+  } catch (e) {}
+}
+
+async function loadUsers() {
+  try {
+    const r = await api("/admin/users");
+    const d = await r.json();
+    const rows = (d.users || []).map(u => {
+      const role = u.role === "admin" ? '<span class="badge prem">admin</span>' : u.role;
+      return `<tr><td>${u.email}</td><td>${u.auth||"-"}</td><td>${role}</td><td>${u.goal||"-"}</td></tr>`;
+    }).join("");
+    document.getElementById("userRows").innerHTML = rows || '<tr><td colspan="4" style="color:var(--muted)">No users.</td></tr>';
+  } catch (e) {}
+}
+
+// Auto-login if token exists
+if (TOKEN) { enterApp(); }
+</script>
+</body>
+</html>
