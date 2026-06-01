@@ -22,6 +22,13 @@
 
 ---
 
+> ### ⚠️ **Important Note for Google Play Testing**
+> The Android app is currently in **Closed Testing** on the Google Play Store. 
+> If you want to download and test the real app from Google Play, please write to me on Telegram at [**@arzucoder**](https://t.me/arzucoder) and send your email address. 
+> I will add you to the closed testers list, and you will be able to download the app successfully!
+
+---
+
 ## 🚀 Key Features
 
 -   **RAG Chat:** Conversational AI grounded in user-provided documents to prevent hallucinations.
