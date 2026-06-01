@@ -11,6 +11,14 @@
   [![Telegram](https://img.shields.io/badge/Telegram-Bot-blue?style=for-the-badge&logo=telegram)](https://t.me/ILM_AIBOT)
   [![Portfolio](https://img.shields.io/badge/Built_by-ARZUCODER-purple?style=for-the-badge)](https://arzucoder.uz)
 
+  <br/><br/>
+  <p>
+    <strong>🔗 Direct Links:</strong><br/>
+    🌐 <b>Live Demo (Web App):</b> <a href="https://ilmai.arzucoder.uz/">https://ilmai.arzucoder.uz/</a><br/>
+    ▶️ <b>Google Play (App):</b> <a href="https://play.google.com/store/apps/details?id=com.arzucoder.ilm_ai">https://play.google.com/store/apps/details?id=com.arzucoder.ilm_ai</a><br/>
+    🤖 <b>Telegram Bot:</b> <a href="https://t.me/ILM_AIBOT">https://t.me/ILM_AIBOT</a><br/>
+    👨‍💻 <b>Portfolio:</b> <a href="https://arzucoder.uz">https://arzucoder.uz</a>
+  </p>
 </div>
 
 <p align="center">
