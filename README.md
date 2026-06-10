@@ -37,6 +37,12 @@
 
 ---
 
+## 📍 Project Status
+
+**Live & actively maintained.** The web app, Android build, and Telegram bot are all in production. Current work focuses on post-launch polishing, RAG retrieval quality, and cost monitoring via the admin observability panel.
+
+---
+
 ## 🚀 Key Features
 
 -   **RAG Chat:** Conversational AI grounded in user-provided documents to prevent hallucinations.
