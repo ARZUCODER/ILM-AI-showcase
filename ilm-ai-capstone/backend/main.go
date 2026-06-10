@@ -29,6 +29,8 @@ func main() {
 
 	auth.InitFirebase()
 
+	// The Telegram bot runs in the same process as a goroutine so it can
+	// reuse the existing PostgreSQL connection and avoid a separate service.
 	telegramToken := os.Getenv("TELEGRAM_BOT_TOKEN")
 	if telegramToken != "" {
 		go telegram.StartBot(telegramToken)
